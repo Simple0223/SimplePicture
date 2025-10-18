@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>人生的轉角</title>
+  <style>
+    :root {
+      --bg: #f9fafb;
+      --card: #ffffff;
+      --accent: #2563eb;
+      --text: #1f2937;
+      --muted: #6b7280;
+    }
+    * {
+      box-sizing: border-box;
+      font-family: 'Noto Sans TC', system-ui, sans-serif;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    .container {
+      width: 100%;
+      max-width: 400px;
+      background: var(--card);
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      padding: 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    h1 {
+      font-size: 1.6rem;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    p.content {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    input[type=password] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type=password]:focus {
+      border-color: var(--accent);
+    }
+    button {
+      width: 100%;
+      margin-top: 12px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:active {
+      background: #1e40af;
+    }
+    .msg {
+      margin-top: 12px;
+      font-size: 0.9rem;
+    }
+    .msg.success {
+      color: #16a34a;
+    }
+    .msg.error {
+      color: #dc2626;
+    }
+    .fade {
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .fade.hidden {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="page-title" class="fade">人生的轉角</h1>
+    <p id="page-content" class="content fade">
+      你有一個很想要但很貴的東西，就在這時你看到路邊掉了一個錢包，裡面的錢有好幾張小朋友。你心想這些錢不只買得起，還能剩下很多，於是你會...
+    </p>
+
+    <input id="pwd" type="password" placeholder="通關後給關主輸入通關密碼" />
+    <button id="btn">送出</button>
+    <div id="message" class="msg"></div>
+  </div>
+
+  <script>
+    const CORRECT = "20251018";
+    const title = document.getElementById("page-title");
+    const content = document.getElementById("page-content");
+    const pwd = document.getElementById("pwd");
+    const btn = document.getElementById("btn");
+    const msg = document.getElementById("message");
+
+    function showMessage(text, type) {
+      msg.textContent = text;
+      msg.className = "msg " + (type === "ok" ? "success" : type === "err" ? "error" : "");
+    }
+
+    btn.addEventListener("click", () => {
+      const val = pwd.value.trim();
+      if (!val) {
+        showMessage("請輸入密碼", "err");
+        return;
+      }
+      if (val === CORRECT) {
+        title.classList.add("hidden");
+        content.classList.add("hidden");
+        setTimeout(() => {
+          title.textContent = "轉角遇到愛";
+          content.textContent = "你因知道「不義之財，毫無益處」，心靈得著了比物質更寶貴的兩樣寶物，「內心平安」和「行為正直」！";
+          title.classList.remove("hidden");
+          content.classList.remove("hidden");
+          showMessage("通關成功！", "ok");
+          pwd.disabled = true;
+          btn.disabled = true;
+        }, 300);
+      } else {
+        showMessage("密碼錯誤，請再試一次。", "err");
+      }
+    });
+
+    pwd.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") btn.click();
+    });
+  </script>
+</body>
+</html>
