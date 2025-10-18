@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>人生的轉角</title>
+  <style>
+    :root{--bg:#f6f8fb;--card:#ffffff;--accent:#2563eb;--muted:#6b7280}
+    *{box-sizing:border-box}
+    body{font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans TC', 'Helvetica Neue', Arial; background:linear-gradient(180deg,var(--bg),#eef2ff);margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px}
+    .container{width:100%;max-width:720px;background:var(--card);border-radius:16px;box-shadow:0 8px 30px rgba(32,41,70,0.08);padding:32px}
+    h1{font-size:28px;margin:0 0 12px;color:#111827}
+    p.content{margin:0 0 20px;color:#374151;line-height:1.6}
+
+    .controls{display:flex;gap:12px;align-items:center}
+    input[type=password]{flex:1;padding:10px 12px;border:1px solid #e6e9ef;border-radius:10px;font-size:15px}
+    button{background:var(--accent);color:white;border:none;padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer}
+    button:active{transform:translateY(1px)}
+
+    .hint{margin-top:12px;color:var(--muted);font-size:13px}
+    .msg{margin-top:12px;font-size:14px}
+    .msg.success{color:green}
+    .msg.error{color:#b91c1c}
+
+    /* 小動畫 */
+    .fade{transition:all .35s cubic-bezier(.2,.9,.3,1);opacity:1}
+    .fade.hidden{opacity:0;transform:translateY(6px)}
+
+    @media (max-width:480px){.container{padding:20px}h1{font-size:22px}}
+  </style>
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1 id="page-title">人生的轉角</h1>
+      <p id="page-content" class="content">你最好的朋友「郝鵬友」，約你週六下午一起去玩最新的 VR 遊戲或戶外活動。但這時間跟你每週的教會小組時間完全衝突。於是你會...</p>
+    </header>
+
+    <section>
+      <div class="controls">
+        <input id="pwd" type="password" placeholder="輸入通關密碼（數字）" aria-label="密碼輸入">
+        <button id="btn">送出</button>
+      </div>
+      <div class="hint">提示：密碼為數字日期格式。</div>
+      <div id="message" class="msg"></div>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      const CORRECT = '20251018';
+      const btn = document.getElementById('btn');
+      const pwd = document.getElementById('pwd');
+      const msg = document.getElementById('message');
+      const title = document.getElementById('page-title');
+      const content = document.getElementById('page-content');
+
+      function showMessage(text, type){
+        msg.textContent = text;
+        msg.className = 'msg ' + (type === 'ok' ? 'success' : (type === 'err' ? 'error' : ''));
+      }
+
+      btn.addEventListener('click', function(){
+        const val = pwd.value.trim();
+        if(!val){ showMessage('請輸入密碼。', 'err'); pwd.focus(); return; }
+        if(val === CORRECT){
+          // 逐步換字、淡入效果
+          title.classList.add('fade','hidden');
+          content.classList.add('fade','hidden');
+          showMessage('', '');
+          setTimeout(()=>{
+            title.textContent = '轉角遇到愛';
+            content.textContent = '你因「信仰視為一切的根基」，心靈不被世界影響、真朋友因你的穩定而靠近！';
+            title.classList.remove('hidden');
+            content.classList.remove('hidden');
+            showMessage('通關成功！內容已更新。', 'ok');
+            // 可選：禁止再次修改
+            pwd.value = '';
+            pwd.disabled = true;
+            btn.disabled = true;
+          }, 250);
+        } else {
+          showMessage('密碼錯誤，請再試一次。', 'err');
+          pwd.select();
+        }
+      });
+
+      // 按 Enter 也送出
+      pwd.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ btn.click(); } });
+    })();
+  </script>
+</body>
+</html>
